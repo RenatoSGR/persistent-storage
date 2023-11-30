@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: azure-voting-app
+  name: azure-voting-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: azure-voting-app
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: azure-voting-app
+    spec:
+      containers:
+      - image: aksrrpoc.azurecr.io/cnny2023/azure-voting-app-rust:cb7
+        name: azure-voting-app-rust
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: azure-voting-config
+        env:
+        - name: DATABASE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: azure-voting-secret
+              key: POSTGRES_PASSWORD
+        resources: {}
+status: {}
